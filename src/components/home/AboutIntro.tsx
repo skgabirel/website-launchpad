@@ -3,8 +3,8 @@ import { about } from "@/data/home";
 
 export function AboutIntro() {
   return (
-    <section className="frame pb-24 md:pb-36">
-      <div className="grid gap-10 border-t border-rule pt-10 md:grid-cols-12 md:gap-x-10 md:pt-14">
+    <section className="frame section-space">
+      <div className="grid gap-8 border-t border-rule pt-8 md:grid-cols-12 md:gap-x-10 md:gap-y-10 md:pt-14">
         <div className="md:col-span-6">
           <div className="aspect-[4/3] overflow-hidden bg-surface">
             <img
@@ -18,10 +18,10 @@ export function AboutIntro() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-10 md:col-span-5 md:col-start-8">
+        <div className="flex flex-col justify-between gap-7 md:col-span-5 md:col-start-8 md:gap-10">
           <div>
             <p className="kicker text-accent">03 — Sobre a GUAN</p>
-            <h2 className="display mt-6 text-[2.2rem] leading-[1.05] md:text-[3.2rem]">
+            <h2 className="display mt-5 text-[2.2rem] leading-[1.05] md:text-[3.2rem]">
               Um olhar atento, <em className="italic">na China</em>, a serviço de quem viaja.
             </h2>
           </div>

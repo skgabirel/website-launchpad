@@ -17,8 +17,8 @@ const contact = [
 export function SiteFooter() {
   return (
     <footer className="bg-ink text-ink-foreground">
-      <div className="frame pb-10 pt-20 md:pt-28">
-        <div className="grid gap-14 md:grid-cols-12">
+      <div className="frame pb-10 pt-16 md:pt-28">
+        <div className="grid gap-12 md:grid-cols-12 md:gap-14">
           <div className="md:col-span-5">
             <p className="display max-w-sm text-3xl md:text-4xl">
               Descobertas da China, <em className="italic">escolhidas</em> para você.
@@ -62,7 +62,7 @@ export function SiteFooter() {
 
         <div
           aria-hidden
-          className="mt-24 flex select-none justify-between font-sans text-[26vw] font-semibold leading-[0.78] text-ink-foreground/[0.07] md:mt-32 xl:text-[22vw] 2xl:text-[300px]"
+          className="mt-16 flex select-none justify-between font-sans text-[26vw] font-semibold leading-[0.78] text-ink-foreground/[0.07] md:mt-32 xl:text-[22vw] 2xl:text-[300px]"
         >
           {"GUAN".split("").map((l) => (
             <span key={l}>{l}</span>

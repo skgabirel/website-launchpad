@@ -4,7 +4,7 @@ import { SectionHeading } from "./SectionHeading";
 
 export function ProductHighlights() {
   return (
-    <section className="frame pb-24 md:pb-36">
+    <section className="frame section-space">
       <SectionHeading
         index="01"
         title="Uma seleção da GUAN"
@@ -15,7 +15,7 @@ export function ProductHighlights() {
         }
       />
 
-      <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 md:mt-14 md:grid-cols-4 md:gap-x-8">
+      <ul className="section-body grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-x-8 md:gap-y-12">
         {products.map((p) => (
           <li key={p.name} className="group">
             <Link to="/catalogo" className="block">

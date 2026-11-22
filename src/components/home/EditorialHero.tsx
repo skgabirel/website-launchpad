@@ -5,7 +5,7 @@ export function EditorialHero() {
   const [first, second] = hero.stories;
 
   return (
-    <section className="frame pb-20 pt-8 md:pb-32 md:pt-14">
+    <section className="frame section-space pt-8 md:pt-14">
       {/* Masthead line */}
       <div className="kicker flex items-center justify-between text-muted-foreground animate-rise">
         <span>Discover — Edição Nº 01</span>
@@ -14,7 +14,7 @@ export function EditorialHero() {
       </div>
 
       {/* Headline + intro */}
-      <div className="mt-10 grid gap-8 md:mt-16 md:grid-cols-12 md:items-end">
+      <div className="mt-8 grid gap-7 md:mt-16 md:grid-cols-12 md:items-end">
         <h1 className="display text-[3.4rem] md:col-span-8 md:text-[6.5rem] xl:text-[8rem] animate-rise [animation-delay:80ms]">
           A China em
           <br />
@@ -32,7 +32,7 @@ export function EditorialHero() {
       </div>
 
       {/* Editorial grid */}
-      <div className="mt-12 grid gap-10 md:mt-20 md:grid-cols-12 md:gap-x-10">
+      <div className="mt-10 grid gap-10 md:mt-20 md:grid-cols-12 md:gap-x-10">
         <figure className="group md:col-span-7">
           <Link to="/discover" className="block overflow-hidden bg-surface">
             <div className="aspect-[4/5]">
@@ -51,7 +51,7 @@ export function EditorialHero() {
           </figcaption>
         </figure>
 
-        <div className="flex flex-col justify-between gap-12 md:col-span-5">
+        <div className="flex flex-col justify-between gap-10 md:col-span-5 md:gap-12">
           {[first, second].map((story, i) =>
             story ? (
               <article key={story.title} className="group">

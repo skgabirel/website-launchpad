@@ -16,7 +16,7 @@ export function CatalogExplorer() {
   };
 
   return (
-    <section className="pb-24 md:pb-36">
+    <section className="section-space">
       <div className="frame">
         <SectionHeading
           index="02"
@@ -51,12 +51,12 @@ export function CatalogExplorer() {
 
       <ul
         ref={track}
-        className="scrollbar-none mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-5 px-5 md:mt-14 md:gap-8 md:scroll-px-10 md:px-10 xl:scroll-px-14 xl:px-14"
+        className="scrollbar-none section-body flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-px-5 px-5 md:gap-8 md:scroll-px-10 md:px-10 xl:scroll-px-14 xl:px-14"
       >
         {categories.map((c, i) => (
           <li
             key={c.title}
-            className="group w-[72vw] shrink-0 snap-start sm:w-[44vw] md:w-[30vw] xl:w-[24vw]"
+            className="group w-[68vw] shrink-0 snap-start sm:w-[44vw] md:w-[30vw] xl:w-[24vw]"
           >
             <Link to="/catalogo" className="block">
               <div className="aspect-[3/4] overflow-hidden bg-surface">
@@ -70,8 +70,8 @@ export function CatalogExplorer() {
                 />
               </div>
               <div className="mt-4 flex items-baseline justify-between gap-4">
-                <h3 className="display text-2xl md:text-[1.75rem]">{c.title}</h3>
-                <span className="kicker text-muted-foreground">
+                <h3 className="display min-w-0 text-2xl md:text-[1.75rem]">{c.title}</h3>
+                <span className="kicker shrink-0 text-muted-foreground">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>
@@ -79,7 +79,6 @@ export function CatalogExplorer() {
             </Link>
           </li>
         ))}
-        <li aria-hidden className="w-1 shrink-0" />
       </ul>
     </section>
   );
