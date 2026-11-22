@@ -1,23 +1,38 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { EditorialHero } from "@/components/home/EditorialHero";
+import { ProductHighlights } from "@/components/home/ProductHighlights";
+import { CatalogExplorer } from "@/components/home/CatalogExplorer";
+import { AboutIntro } from "@/components/home/AboutIntro";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "GUAN — A China em novas perspectivas" },
+      {
+        name: "description",
+        content:
+          "Personal shopper e curadoria de produtos da China para viajantes brasileiros. Design, moda, tecnologia e descobertas selecionadas.",
+      },
+      { property: "og:title", content: "GUAN — A China em novas perspectivas" },
+      {
+        property: "og:description",
+        content:
+          "Personal shopper e curadoria de produtos da China para viajantes brasileiros.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <EditorialHero />
+      <ProductHighlights />
+      <CatalogExplorer />
+      <AboutIntro />
+    </>
   );
 }
