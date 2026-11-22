@@ -1,20 +1,123 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ComingSoon } from "@/components/site/ComingSoon";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { fallback, zodValidator } from "@tanstack/zod-adapter";
+import { useMemo } from "react";
+import { z } from "zod";
+import { ActiveFilters, type ActiveChip } from "@/components/catalog/ActiveFilters";
+import { CatalogHeader } from "@/components/catalog/CatalogHeader";
+import { CatalogToolbar } from "@/components/catalog/CatalogToolbar";
+import { CategoryRail } from "@/components/catalog/CategoryRail";
+import { ProductGrid } from "@/components/catalog/ProductGrid";
+import { catalogBrands, catalogCategories, catalogProducts } from "@/data/catalog";
+import { queryCatalog, toSortKey, type SortKey } from "@/lib/catalog";
+
+const catalogSearchSchema = z.object({
+  q: fallback(z.string(), "").default(""),
+  categoria: fallback(z.string(), "").default(""),
+  marca: fallback(z.array(z.string()), []).default([]),
+  ordem: fallback(z.string(), "relevancia").default("relevancia"),
+});
+
+const description =
+  "Uma seleção de moda, casa & design, tecnologia, beleza e papelaria encontrada na China pela curadoria GUAN.";
 
 export const Route = createFileRoute("/catalogo")({
+  validateSearch: zodValidator(catalogSearchSchema),
   head: () => ({
     meta: [
       { title: "Catálogo — GUAN" },
-      { name: "description", content: "Produtos selecionados da China: moda, casa, tecnologia, beleza e mais." },
+      { name: "description", content: description },
       { property: "og:title", content: "Catálogo — GUAN" },
-      { property: "og:description", content: "Produtos selecionados da China: moda, casa, tecnologia, beleza e mais." },
+      { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Page,
+  component: CatalogPage,
 });
 
-function Page() {
-  return <ComingSoon kicker="Catálogo" title="Um catálogo em constante curadoria." />;
+const brandCounts = catalogProducts.reduce<Record<string, number>>((acc, p) => {
+  acc[p.brand] = (acc[p.brand] ?? 0) + 1;
+  return acc;
+}, {});
+
+function CatalogPage() {
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: "/catalogo" });
+
+  const sort = toSortKey(search.ordem);
+  const category = catalogCategories.some((c) => c.slug === search.categoria)
+    ? search.categoria
+    : "";
+  const brands = search.marca.filter((b) => catalogBrands.includes(b));
+
+  const results = useMemo(
+    () => queryCatalog(catalogProducts, { q: search.q, category, brands, sort }),
+    [search.q, category, brands, sort],
+  );
+
+  const update = (patch: Partial<typeof search>) =>
+    navigate({
+      search: (prev) => ({ ...prev, ...patch }),
+      replace: true,
+      resetScroll: false,
+    });
+
+  const clearFilters = () => update({ q: "", categoria: "", marca: [] });
+
+  const chips: ActiveChip[] = [
+    ...(search.q.trim()
+      ? [{ key: "q", label: `“${search.q.trim()}”`, onRemove: () => update({ q: "" }) }]
+      : []),
+    ...(category
+      ? [
+          {
+            key: "cat",
+            label: catalogCategories.find((c) => c.slug === category)?.title ?? category,
+            onRemove: () => update({ categoria: "" }),
+          },
+        ]
+      : []),
+    ...brands.map((b) => ({
+      key: `b-${b}`,
+      label: b,
+      onRemove: () => update({ marca: brands.filter((x) => x !== b) }),
+    })),
+  ];
+
+  return (
+    <>
+      <CatalogHeader
+        query={search.q}
+        onQueryChange={(q) => update({ q })}
+        total={catalogProducts.length}
+      />
+
+      <CategoryRail
+        categories={catalogCategories}
+        active={category}
+        onSelect={(slug) => update({ categoria: slug })}
+      />
+
+      <CatalogToolbar
+        brands={catalogBrands}
+        brandCounts={brandCounts}
+        selectedBrands={brands}
+        onBrandsChange={(marca) => update({ marca })}
+        onClear={() => update({ marca: [] })}
+        sort={sort}
+        onSortChange={(ordem: SortKey) => update({ ordem })}
+        resultCount={results.length}
+      />
+
+      <section className="frame section-space pt-6 md:pt-8">
+        <div className="mb-8 flex min-h-8 items-center justify-between gap-4 md:mb-10">
+          <ActiveFilters chips={chips} onClear={clearFilters} />
+          <span className="shrink-0 text-[12px] text-foreground/55 sm:hidden">
+            {results.length} {results.length === 1 ? "produto" : "produtos"}
+          </span>
+        </div>
+        <ProductGrid products={results} onClear={clearFilters} />
+      </section>
+    </>
+  );
 }
