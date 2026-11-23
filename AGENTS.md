@@ -34,3 +34,4 @@ use the editor.
 - Site chrome (SiteHeader/SiteFooter) is mounted once in `src/routes/__root.tsx` around `<Outlet />`; pages render only their own content. Why: one shared frame, no per-page duplication.
 - Homepage sections live in `src/components/home/`, placeholder content in `src/data/`. Why: data can later be swapped for real sources without touching layout.
 - All styling uses tokens and `@utility` helpers (frame, kicker, display, link-quiet, section-space, section-body — the shared section rhythm) in `src/styles.css`; radius is globally 0. Why: keeps the editorial system consistent.
+- Catalog page sections live in `src/components/catalog/`, sample data in `src/data/catalog.ts`, and search/filter/sort rules as pure functions in `src/lib/catalog.ts` (tested). Filters are kept in the URL (only non-default values). Why: shareable filtered views and logic testable without UI.

@@ -74,7 +74,7 @@ export function CatalogToolbar({
       className="sticky top-14 z-40 mt-12 border-y border-rule bg-background/90 backdrop-blur-md md:top-16 md:mt-16"
     >
       <div className="frame flex h-14 items-center justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-6">
+        <div className="flex min-w-0 items-center gap-4 sm:gap-6">
           {/* Mobile: bottom sheet */}
           <button
             type="button"
@@ -97,7 +97,7 @@ export function CatalogToolbar({
               strokeWidth={1.4}
             />
           </button>
-          <span className="hidden truncate text-[13px] text-foreground/55 sm:inline">
+          <span className="truncate text-[12px] text-foreground/55 sm:text-[13px]">
             {resultCount} {resultCount === 1 ? "produto" : "produtos"}
           </span>
         </div>

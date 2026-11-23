@@ -37,13 +37,13 @@ export function ProductGrid({
               className="img-editorial group-hover:scale-[1.04]"
             />
           </div>
-          <div className="mt-4 flex items-start justify-between gap-3">
-            <div className="min-w-0 space-y-1.5">
-              <p className="kicker truncate text-muted-foreground">{p.brand}</p>
-              <h3 className="text-[14px] font-medium leading-snug md:text-[15px]">{p.name}</h3>
-              <p className="text-[13px] text-foreground/60">{formatPrice(p)}</p>
+          <div className="mt-4 space-y-1.5">
+            <p className="kicker text-muted-foreground">{p.brand}</p>
+            <h3 className="text-[14px] font-medium leading-snug md:text-[15px]">{p.name}</h3>
+            <div className="flex items-center justify-between gap-3">
+              <p className="min-w-0 text-[13px] text-foreground/60">{formatPrice(p)}</p>
+              <AddToOrderButton productName={p.name} />
             </div>
-            <AddToOrderButton productName={p.name} />
           </div>
         </li>
       ))}

@@ -10,15 +10,28 @@ import { ProductGrid } from "@/components/catalog/ProductGrid";
 import { catalogBrands, catalogCategories, catalogProducts } from "@/data/catalog";
 import { queryCatalog, toSortKey, type SortKey } from "@/lib/catalog";
 
+// All optional so default values never get written into the address.
 const catalogSearchSchema = z.object({
-  q: fallback(z.string(), "").default(""),
-  categoria: fallback(z.string(), "").default(""),
-  marca: fallback(z.array(z.string()), []).default([]),
-  ordem: fallback(z.string(), "relevancia").default("relevancia"),
+  q: fallback(z.string(), "").optional(),
+  categoria: fallback(z.string(), "").optional(),
+  marca: fallback(z.array(z.string()), []).optional(),
+  ordem: fallback(z.string(), "relevancia").optional(),
 });
 
 const description =
   "Uma seleção de moda, casa & design, tecnologia, beleza e papelaria encontrada na China pela curadoria GUAN.";
+
+type CatalogState = { q: string; categoria: string; marca: string[]; ordem: string };
+
+// Keep the address clean: only non-default filters appear in the URL.
+function cleanSearch(s: CatalogState) {
+  return {
+    ...(s.q ? { q: s.q } : {}),
+    ...(s.categoria ? { categoria: s.categoria } : {}),
+    ...(s.marca.length > 0 ? { marca: s.marca } : {}),
+    ...(s.ordem !== "relevancia" ? { ordem: s.ordem } : {}),
+  };
+}
 
 export const Route = createFileRoute("/catalogo")({
   validateSearch: zodValidator(catalogSearchSchema),
@@ -41,8 +54,14 @@ const brandCounts = catalogProducts.reduce<Record<string, number>>((acc, p) => {
 }, {});
 
 function CatalogPage() {
-  const search = Route.useSearch();
+  const raw = Route.useSearch();
   const navigate = useNavigate({ from: "/catalogo" });
+  const search: CatalogState = {
+    q: raw.q ?? "",
+    categoria: raw.categoria ?? "",
+    marca: raw.marca ?? [],
+    ordem: raw.ordem ?? "relevancia",
+  };
 
   const sort = toSortKey(search.ordem);
   const category = catalogCategories.some((c) => c.slug === search.categoria)
@@ -50,14 +69,16 @@ function CatalogPage() {
     : "";
   const brands = search.marca.filter((b) => catalogBrands.includes(b));
 
+  const brandsKey = brands.join("|");
   const results = useMemo(
     () => queryCatalog(catalogProducts, { q: search.q, category, brands, sort }),
-    [search.q, category, brands, sort],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [search.q, category, brandsKey, sort],
   );
 
-  const update = (patch: Partial<typeof search>) =>
+  const update = (patch: Partial<CatalogState>) =>
     navigate({
-      search: (prev) => ({ ...prev, ...patch }),
+      search: cleanSearch({ ...search, ...patch }),
       replace: true,
       resetScroll: false,
     });
@@ -109,13 +130,12 @@ function CatalogPage() {
         resultCount={results.length}
       />
 
-      <section className="frame section-space pt-6 md:pt-8">
-        <div className="mb-8 flex min-h-8 items-center justify-between gap-4 md:mb-10">
-          <ActiveFilters chips={chips} onClear={clearFilters} />
-          <span className="shrink-0 text-[12px] text-foreground/55 sm:hidden">
-            {results.length} {results.length === 1 ? "produto" : "produtos"}
-          </span>
-        </div>
+      <section className="frame section-space pt-8 md:pt-12">
+        {chips.length > 0 && (
+          <div className="mb-8 md:mb-10">
+            <ActiveFilters chips={chips} onClear={clearFilters} />
+          </div>
+        )}
         <ProductGrid products={results} onClear={clearFilters} />
       </section>
     </>
